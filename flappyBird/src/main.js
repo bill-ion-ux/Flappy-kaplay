@@ -24,9 +24,10 @@ k.scene("background", () => {
         k.pos(width() - 100 , 500),
 
     ]);
-     k.add([
+    k.add([
         k.sprite("pipe", {flipY: true}),
-        k.pos(width() - 100 , -50),
+        k.pos(width() - 100 , 300),
+        k.anchor("botleft")
 
     ]);
     k.add([
@@ -38,9 +39,8 @@ k.scene("background", () => {
     })
     ]);
     const bird = k.add([
-        k.pos(600 , 300),
+        k.pos(k.width() / 2 , k.height() / 2 ),
         k.sprite("birdD"),
-        k.scale(1),
         area(),
         body(),
     ]);
@@ -53,8 +53,6 @@ k.scene("background", () => {
 k.go("background");
 
 let idle = true;
-
-
 
 function isIdle(idle){
     if(!idle){
