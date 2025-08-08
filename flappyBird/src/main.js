@@ -14,6 +14,7 @@ k.loadSprite("pipe", "sprites/pipe.png");
 
 
 k.scene("background", () => {
+    const pipeGap = 100;
     k.add([
         k.sprite("bg", {width : width() , height : height()}),
         k.pos(0,0),
@@ -21,12 +22,12 @@ k.scene("background", () => {
     ]);
     k.add([
         k.sprite("pipe"),
-        k.pos(width() - 100 , 500),
+        k.pos(width() - 100 , height()/2 + pipeGap/2),
 
     ]);
     k.add([
         k.sprite("pipe", {flipY: true}),
-        k.pos(width() - 100 , 300),
+        k.pos(width() - 100 , height()/2 - pipeGap/2),
         k.anchor("botleft")
 
     ]);
