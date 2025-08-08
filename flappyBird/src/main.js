@@ -6,7 +6,7 @@ const k = kaplay({
 });
 
 k.loadRoot("./"); // A good idea for Itch.io publishing later
-k.loadSprite("bean", "sprites/bean.png");
+k.loadSprite("birdD", "sprites/bird-down.png");
 k.loadSprite("base", "sprites/base.png");
 k.loadSprite("bg", "sprites/bg.png");
 k.loadSprite("pipe", "sprites/pipe.png");
@@ -37,22 +37,25 @@ k.scene("background", () => {
         isStatic : true
     })
     ]);
+    const bird = k.add([
+        k.pos(600 , 300),
+        k.sprite("birdD"),
+        k.scale(1),
+        area(),
+        body(),
+    ]);
+    k.onClick(() => {
+        idle = false;
+        isIdle(idle);
+        bird.jump(100)
+    });
 });
 k.go("background");
 
 let idle = true;
-const bean = k.add([
-    k.pos(600 , 300),
-    k.sprite("bean"),
-    area(),
-    body(),
-]);
 
-k.onClick(() => {
-    idle = false;
-    isIdle(idle);
-    bean.jump(100)
-});
+
+
 function isIdle(idle){
     if(!idle){
         k.setGravity(160);
