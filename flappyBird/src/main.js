@@ -10,34 +10,44 @@ k.loadSprite("birdD", "sprites/bird-down.png");
 k.loadSprite("base", "sprites/base.png");
 k.loadSprite("bg", "sprites/bg.png");
 k.loadSprite("pipe", "sprites/pipe.png");
+k.loadSprite("gameover", "sprites/gameover.png");
 
 
 
-k.scene("background", () => {
+
+k.scene("game", () => {
     const pipeGap = 100;
     k.add([
         k.sprite("bg", {width : width() , height : height()}),
         k.pos(0,0),
         k.fixed(),
     ]);
+    const offset = rand(-40, 40);
+
     k.add([
         k.sprite("pipe"),
-        k.pos(width() - 100 , height()/2 + pipeGap/2),
-
+        k.pos(width() - 100 , height()/2 + offset + pipeGap/2),
+        area(),
+        "pipe"
     ]);
     k.add([
         k.sprite("pipe", {flipY: true}),
-        k.pos(width() - 100 , height()/2 - pipeGap/2),
-        k.anchor("botleft")
-
+        k.pos(width() - 100 , height()/2 + offset- pipeGap/2),
+        k.anchor("botleft"),
+        area(),
+        "pipe"
     ]);
+    k.onUpdate("pipe", (pipe) => {
+        pipe.move(-160, 0)
+
+    });
     k.add([
-    k.pos(0,620),
-    k.sprite("base",{width : width(), height : 120}),
-    area(),
-    body({
-        isStatic : true
-    })
+        k.pos(0,620),
+        k.sprite("base",{width : width(), height : 120}),
+        area(),
+        body({
+            isStatic : true
+        })
     ]);
     const bird = k.add([
         k.pos(k.width() / 2 , k.height() / 2 ),
@@ -45,13 +55,30 @@ k.scene("background", () => {
         area(),
         body(),
     ]);
+    bird.onCollide("pipe", () => {
+        go("gameOver");
+    });
+    
     k.onClick(() => {
         idle = false;
         isIdle(idle);
         bird.jump(100)
     });
 });
-k.go("background");
+k.scene("gameOver", () =>{
+    k.add([
+        k.sprite("bg", {width : width() , height : height()}),
+        k.pos(0,0),
+        k.fixed(),
+    ]);
+    k.add([
+        k.sprite("gameover"),
+        k.pos(width() /2 - 300 , height()/2 - 100),
+        k.scale(3)
+    ]);
+});
+
+k.go("game");
 
 let idle = true;
 
