@@ -6,6 +6,21 @@ const k = kaplay();
 k.loadRoot("./"); // A good idea for Itch.io publishing later
 k.loadSprite("bean", "sprites/bean.png");
 
-k.add([k.pos(120, 80), k.sprite("bean")]);
+let idle = true;
+const bean = k.add([
+    k.pos(600 , 300),
+    k.sprite("bean"),
+    area(),
+    body(),
+]);
 
-k.onClick(() => k.addKaboom(k.mousePos()));
+k.onClick(() => {
+    idle = false;
+    isIdle(idle);
+    bean.jump(100)
+});
+function isIdle(idle){
+    if(!idle){
+        k.setGravity(160);
+    }
+}
