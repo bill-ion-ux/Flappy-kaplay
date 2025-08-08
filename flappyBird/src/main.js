@@ -11,9 +11,26 @@ k.loadSprite("base", "sprites/base.png");
 k.loadSprite("bg", "sprites/bg.png");
 k.loadSprite("pipe", "sprites/pipe.png");
 k.loadSprite("gameover", "sprites/gameover.png");
+k.loadSprite("message", "sprites/message.png");
 
 
+k.scene("start", () => {
+    k.add([
+        k.sprite("bg", {width : width() , height : height()}),
+        k.pos(0,0),
+        k.fixed(),
+    ]);
+    k.add([
+        k.sprite("message"),
+        k.pos(width() / 2 - 100 , height() /2 - 200),
+        k.fixed(),
+    ]);
+    k.onClick(() => {
+        go("game");
+    })
+});
 
+go("start");
 
 k.scene("game", () => {
     const pipeGap = 100;
@@ -77,8 +94,6 @@ k.scene("gameOver", () =>{
         k.scale(3)
     ]);
 });
-
-k.go("game");
 
 let idle = true;
 
