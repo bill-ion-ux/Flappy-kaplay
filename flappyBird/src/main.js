@@ -36,7 +36,10 @@ k.scene("start", () => {
 go("start");
 
 k.scene("game", () => {
+    const g = 1200;
+    const jumpForce = 320;
     const pipeGap = 100;
+    let idle = true;
     let score = 0;
     k.add([
         k.sprite("bg", {width : width() , height : height()}),
@@ -74,14 +77,31 @@ k.scene("game", () => {
             
         }
     });
-    const base = k.add([
+    const base1 = k.add([
         k.pos(0,620),
         k.sprite("base",{width : width(), height : 120}),
         area(),
         body({
             isStatic : true
-        })
+        }),
+        k.z(10),
+        "base"
     ]);
+    const base2 = k.add([
+        k.pos(width(), 620),
+        k.sprite("base", { width: width(), height: 120 }),
+        k.z(10),
+        "base"
+    ]);
+    const baseSpeed = 120; // pixels per second
+    k.onUpdate("base", (b) => {
+        b.move(-baseSpeed, 0);
+
+        if (b.pos.x <= -width()) {
+            b.pos.x += width() * 2;
+        }
+    });
+
     const scoreText = add([
         k.text(score, {size : 40})
     ]);
@@ -106,20 +126,32 @@ k.scene("game", () => {
     bird.onCollide("pipe", () => {
         go("gameOver");
     });
-    
+    function isIdle(idle){
+        if(!idle){
+            k.setGravity(g);
+        }
+    }
     k.onClick(() => {
         idle = false;
         isIdle(idle);
-        bird.jump(150);
+        bird.jump(jumpForce);
         bird.angle = -30;
     });
-   bird.onUpdate(() => {
-    // Smoothly rotate toward 90° when falling
-    if (bird.vel.y > 0 && bird.angle < 90) {
-        bird.angle = k.lerp(bird.angle, 90, 8 * k.dt()); 
-    }
+    bird.angle = 0; // <--- initialize so k.lerp never sees undefined
+
+    bird.onUpdate(() => {
+        if (bird.vel.y < 0) {
+            bird.angle = -20;
+        } else {
+            bird.angle = k.lerp(bird.angle, 90, 4 * k.dt());
+        }
+    });
+    
+
+        
+  
 });
-});
+
 k.scene("gameOver", () =>{
     k.add([
         k.sprite("bg", {width : width() , height : height()}),
@@ -136,10 +168,4 @@ k.scene("gameOver", () =>{
     })
 });
 
-let idle = true;
 
-function isIdle(idle){
-    if(!idle){
-        k.setGravity(260);
-    }
-}
