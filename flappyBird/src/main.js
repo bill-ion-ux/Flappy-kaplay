@@ -7,6 +7,8 @@ const k = kaplay({
 
 k.loadRoot("./"); // A good idea for Itch.io publishing later
 k.loadSprite("birdD", "sprites/bird-down.png");
+k.loadSprite("birdup", "sprites/bird-up.png");
+k.loadSprite("birdmid", "sprites/bird-mid.png");
 k.loadSprite("base", "sprites/base.png");
 k.loadSprite("bg", "sprites/bg.png");
 k.loadSprite("pipe", "sprites/pipe.png");
@@ -46,15 +48,15 @@ k.scene("game", () => {
     const offset = rand(-50, 50);
 
         k.add([
-            k.sprite("pipe", {height : 500 , width : 50}),
-            k.pos(width() - 100 , height()/2 + offset + pipeGap/2),
+            k.sprite("pipe"),
+            k.pos(width() + 100 , height()/2 + offset + pipeGap/2 ),
             area(),
             "pipe",
             {passed : false}
         ]);
         k.add([
-            k.sprite("pipe", {flipY: true}, {height : 1000 , width : 50}),
-            k.pos(width() - 100 , height()/2 + offset - pipeGap/2),
+            k.sprite("pipe", {flipY: true}),
+                k.pos( width() + 100 ,   height()/2 + offset - pipeGap/2),
             k.anchor("botleft"),
             area(),
             "pipe"
@@ -72,7 +74,7 @@ k.scene("game", () => {
             
         }
     });
-    k.add([
+    const base = k.add([
         k.pos(0,620),
         k.sprite("base",{width : width(), height : 120}),
         area(),
@@ -83,13 +85,23 @@ k.scene("game", () => {
     const scoreText = add([
         k.text(score, {size : 40})
     ]);
-
+    const birdStartX = k.width() / 4;
+    const birdFrames = ["birdup","birdmid","birdD"];
+    let frame = 0;
+    k.loop(0.1, () => {
+        frame = (frame + 1) % birdFrames.length;
+        bird.use(k.sprite(birdFrames[frame]));
+    });
     const bird = k.add([
-        k.pos(k.width() / 2 , k.height() / 2 ),
+        k.pos(birdStartX, k.height() / 2 ),
         k.sprite("birdD"),
         area(),
         body(),
     ]);
+
+    bird.onUpdate(() => {
+        bird.pos.x = birdStartX;
+    });
     bird.onCollide("pipe", () => {
         go("gameOver");
     });
@@ -97,7 +109,7 @@ k.scene("game", () => {
     k.onClick(() => {
         idle = false;
         isIdle(idle);
-        bird.jump(130);
+        bird.jump(100);
     });
 });
 k.scene("gameOver", () =>{
@@ -120,6 +132,6 @@ let idle = true;
 
 function isIdle(idle){
     if(!idle){
-        k.setGravity(160);
+        k.setGravity(260);
     }
 }
