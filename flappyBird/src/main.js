@@ -97,6 +97,7 @@ k.scene("game", () => {
         k.sprite("birdD"),
         area(),
         body(),
+        "bird"
     ]);
 
     bird.onUpdate(() => {
@@ -109,8 +110,15 @@ k.scene("game", () => {
     k.onClick(() => {
         idle = false;
         isIdle(idle);
-        bird.jump(100);
+        bird.jump(150);
+        bird.angle = -30;
     });
+   bird.onUpdate(() => {
+    // Smoothly rotate toward 90° when falling
+    if (bird.vel.y > 0 && bird.angle < 90) {
+        bird.angle = k.lerp(bird.angle, 90, 8 * k.dt()); 
+    }
+});
 });
 k.scene("gameOver", () =>{
     k.add([
